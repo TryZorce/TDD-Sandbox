@@ -1,50 +1,30 @@
-export function volPossible({
-  poidsVide,
-  poidsMaxSansCarburant,
-  poidsMaxDecollage,
-  poidsMaxAtterrissage,
-  capaciteMaxCarburant,
-  nombrePassagers,
-  poidsParPassager,
-  consommationPar100kmParPassager,
-  densiteCarburant
-}) {
-  const maxPassagers = 400;
-  const poidsTotalPassagers = nombrePassagers * poidsParPassager;
-  const poidsCharge = poidsVide + poidsTotalPassagers;
+export function flyable(poidsAVide, poidsMaxCharge, poidsMaxDecollage, poidsMaxAtterrissage, capaciteCarburant, capacitePassagersMax, nbPassagers, distance) {
+  const poidsPassager = 100; 
+  const consommationCarburantPassagerPar100km = 3.1;
+  const densiteKerosene = 0.81; 
 
-  if (poidsVide >= poidsMaxSansCarburant ||
-      poidsVide >= poidsMaxDecollage ||
-      poidsVide >= poidsMaxAtterrissage) {
-    return false;
+  if (nbPassagers > capacitePassagersMax) {
+      return false;
   }
 
-  if (poidsCharge <= poidsVide) {
-    return false;
+  const poidsPassagers = nbPassagers * poidsPassager;
+  const poidsTotalCharge = poidsAVide + poidsPassagers;
+  if (poidsTotalCharge > poidsMaxCharge) {
+      return false;
   }
 
-  if (poidsCharge >= poidsMaxDecollage) {
-    return false;
+  const carburantNecessaire = nbPassagers * (consommationCarburantPassagerPar100km / 100) * distance * densiteKerosene;
+  if (carburantNecessaire > capaciteCarburant) {
+      return false;
   }
 
-  if (poidsCharge >= poidsMaxSansCarburant || poidsCharge >= poidsMaxAtterrissage) {
-    return false;
+  const poidsTotalAvecCarburant = poidsTotalCharge + carburantNecessaire;
+  if (poidsTotalAvecCarburant > poidsMaxDecollage) {
+      return false;
   }
 
-  const poidsCarburantNecessaire = nombrePassagers * (consommationPar100kmParPassager * 100) * densiteCarburant;
-  
-  if (poidsCarburantNecessaire >= capaciteMaxCarburant) {
-    return false;
-  }
-
-  const poidsTotalAvecCarburant = poidsCharge + poidsCarburantNecessaire;
-  
-  if (poidsTotalAvecCarburant >= poidsMaxDecollage) {
-    return false;
-  }
-
-  if (nombrePassagers > maxPassagers) {
-    return false;
+  if (poidsTotalCharge + carburantNecessaire > poidsMaxAtterrissage) {
+      return false;
   }
 
   return true;
