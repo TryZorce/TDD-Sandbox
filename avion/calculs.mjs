@@ -1,31 +1,34 @@
 export function flyable(poidsAVide, poidsMaxCharge, poidsMaxDecollage, poidsMaxAtterrissage, capaciteCarburant, capacitePassagersMax, nbPassagers, distance) {
-  const poidsPassager = 100; 
-  const consommationCarburantPassagerPar100km = 3.1;
-  const densiteKerosene = 0.81; 
+    const poidsPassager = 100; 
+    const consommationCarburantPassagerPar100km = 3.1; 
+    const densiteKerosene = 0.81; 
 
-  if (nbPassagers > capacitePassagersMax) {
-      return false;
-  }
+    if (nbPassagers > capacitePassagersMax) {
+        return false;
+    }
 
-  const poidsPassagers = nbPassagers * poidsPassager;
-  const poidsTotalCharge = poidsAVide + poidsPassagers;
-  if (poidsTotalCharge > poidsMaxCharge) {
-      return false;
-  }
+    const poidsPassagers = nbPassagers * poidsPassager;
+    const poidsTotalCharge = poidsAVide + poidsPassagers;
 
-  const carburantNecessaire = nbPassagers * (consommationCarburantPassagerPar100km / 100) * distance * densiteKerosene;
-  if (carburantNecessaire > capaciteCarburant) {
-      return false;
-  }
+    if (poidsTotalCharge > poidsMaxCharge) {
+        return false;
+    }
 
-  const poidsTotalAvecCarburant = poidsTotalCharge + carburantNecessaire;
-  if (poidsTotalAvecCarburant > poidsMaxDecollage) {
-      return false;
-  }
+    const carburantNecessaire = nbPassagers * (consommationCarburantPassagerPar100km / 100) * distance * densiteKerosene;
 
-  if (poidsTotalCharge + carburantNecessaire > poidsMaxAtterrissage) {
-      return false;
-  }
+    if (carburantNecessaire > capaciteCarburant) {
+        return false;
+    }
 
-  return true;
+    const poidsTotalAvecCarburant = poidsTotalCharge + carburantNecessaire;
+
+    if (poidsTotalAvecCarburant > poidsMaxDecollage) {
+        return false;
+    }
+
+    if (poidsTotalAvecCarburant > poidsMaxAtterrissage) {
+        return false;
+    }
+
+    return true;
 }
